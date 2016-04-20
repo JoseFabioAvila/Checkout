@@ -1,30 +1,27 @@
 package com.example.fabio.checkout;
 
 /**
- * Created by fabio on 19/04/2016.
+ * Created by fabio on 20/04/2016.
  */
-public class Checkout {
+public class Producto {
     private String cliente;
     private int numCheckout;
     private String alistado;
-    private String bodega;
 
-    Checkout(){
+    Producto(){
 
     }
 
-    public String getCliente() { return cliente; }
+    public String getCliente() {
+        return cliente;
+    }
 
-    public int getNumCheckout() { return numCheckout; }
+    public int getNumCheckout() {
+        return numCheckout;
+    }
 
-    public String getAlistado() { return alistado; }
-
-    public String getBodega() { return bodega; }
-
-
-
-    public void setBodega(String bodega) {
-        this.bodega = bodega;
+    public String getAlistado() {
+        return alistado;
     }
 
     public void setCliente(String cliente) {

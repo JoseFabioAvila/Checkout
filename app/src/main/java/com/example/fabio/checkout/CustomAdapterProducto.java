@@ -1,30 +1,26 @@
 package com.example.fabio.checkout;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * Created by fabio on 19/04/2016.
+ * Created by fabio on 20/04/2016.
  */
-public class CustomAdapter  extends BaseAdapter {
-    LinkedList<Checkout> result;
+public class CustomAdapterProducto  extends BaseAdapter {
+    LinkedList<Producto> result;
     Context context;
     private static LayoutInflater inflater=null;
+
     Holder holder=new Holder();
 
 
-    public CustomAdapter(ListaCheckouts mainActivity, LinkedList<Checkout> prgmNameList) {
+    public CustomAdapterProducto(ListaProductos mainActivity, LinkedList<Producto> prgmNameList) {
         // TODO Auto-generated constructor stub
         result=prgmNameList;
         context=mainActivity;
@@ -61,7 +57,7 @@ public class CustomAdapter  extends BaseAdapter {
         // TODO Auto-generated method stub
         //Holder holder=new Holder();
         View rowView;
-        rowView = inflater.inflate(R.layout.list_item_checkout, null);
+        rowView = inflater.inflate(R.layout.list_item_producto, null);
         holder.tv=(TextView) rowView.findViewById(R.id.numCheckout);
 
         holder.tv.setText("Checkout - #"+String.valueOf(result.get(position).getNumCheckout()));
@@ -72,3 +68,4 @@ public class CustomAdapter  extends BaseAdapter {
         return rowView;
     }
 }
+

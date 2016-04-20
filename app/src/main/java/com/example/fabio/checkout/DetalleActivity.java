@@ -1,5 +1,6 @@
 package com.example.fabio.checkout;
 
+import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,8 +24,18 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class DetalleActivity extends AppCompatActivity {
 
@@ -36,6 +48,14 @@ public class DetalleActivity extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
+
+    ListView listaProductos;
+
+    LinkedList<Producto> productos = new LinkedList<Producto>();
+
+    String TAG = "Response";
+    String getCel;
+    SoapPrimitive resultString;
 
     public ArrayList<String> listItems = new ArrayList<String>();
 
@@ -57,13 +77,99 @@ public class DetalleActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        //mViewPager = (ViewPager) findViewById(R.id.container);
+        //mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        //tabLayout.setupWithViewPager(null);
+
+        AsyncCallWS webservices = new AsyncCallWS();
+        webservices.execute();
 
 
+    }
+
+
+
+    private class AsyncCallWS extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            Log.i(TAG, "onPreExecute");
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Log.i(TAG, "doInBackground");
+            calculate();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            Log.i(TAG, "onPostExecute");
+            if(resultString == null){
+                Toast.makeText(getApplicationContext(), "Estoy nulo", Toast.LENGTH_LONG).show();
+            }
+            else{
+
+                try {
+                    JSONObject obj = new JSONObject(resultString.toString());
+                    if(obj.getJSONArray("Table1").getJSONObject(0).getString("Error").equals("N")) {
+
+                        JSONArray listaCheckoutsJson = obj.getJSONArray("checkout");
+                        for (int i = 0; i < listaCheckoutsJson.length(); i++) {
+                            Producto checkoutObj = new Producto();
+                            checkoutObj.setNumCheckout(listaCheckoutsJson.getJSONObject(i).getInt("checkout"));
+                            checkoutObj.setCliente(listaCheckoutsJson.getJSONObject(i).getString("descripcion_cliente"));
+                            checkoutObj.setAlistado(listaCheckoutsJson.getJSONObject(i).getString("alistado"));
+
+                            productos.add(checkoutObj);
+
+
+                        }
+
+                        //listaProductos.setAdapter(new CustomAdapterProducto(DetalleActivity.this, productos));
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(),"Error al cargar checkouts",Toast.LENGTH_LONG).show();
+                    }
+                }
+                catch (Exception ex){
+                    Log.i(TAG,"Error: "+ ex.getMessage());
+                }
+            }
+        }
+
+    }
+
+    public void calculate() {
+        //http://ncqservices.com:82/wsCheckout/wsCheckout.asmx?op=traerEncabezadoCheckout
+        String SOAP_ACTION = "http://tempuri.org/traerEncabezadoCheckout";
+        String METHOD_NAME = "traerEncabezadoCheckout";
+        String NAMESPACE = "http://tempuri.org/";
+        String URL = "http://ncqservices.com:82/wsCheckout/wsCheckout.asmx";
+
+        try {
+            SoapObject Request = new SoapObject(NAMESPACE, METHOD_NAME);
+            Request.addProperty("usuario","admin");
+            Request.addProperty("clave", "0");
+
+            SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            soapEnvelope.dotNet = true;
+            soapEnvelope.setOutputSoapObject(Request);
+
+            HttpTransportSE transport = new HttpTransportSE(URL);
+
+            transport.call(SOAP_ACTION, soapEnvelope);
+            resultString = (SoapPrimitive) soapEnvelope.getResponse();
+
+            //Log.i(TAG, "Result Celsius: " + resultString);
+            //Toast.makeText(this,"reusltado: "+resultString,Toast.LENGTH_LONG).show();
+        } catch (Exception ex) {
+            Log.e(TAG, "Error: " + ex.getMessage());
+        }
     }
 
 
@@ -99,6 +205,8 @@ public class DetalleActivity extends AppCompatActivity {
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
 
+
+
         public PlaceholderFragment() {
         }
 
@@ -115,14 +223,11 @@ public class DetalleActivity extends AppCompatActivity {
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_detalle, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
 
-            ListView listaDetalles = (ListView) rootView.findViewById(R.id.listDetalle);
-            ListAdapter adapter;
             /*adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,listItems);
             listaDetalles.setAdapter(adapter);
 
@@ -132,6 +237,7 @@ public class DetalleActivity extends AppCompatActivity {
 
             return rootView;
         }
+
     }
 
     /**
@@ -170,4 +276,6 @@ public class DetalleActivity extends AppCompatActivity {
             return null;
         }
     }
+
+
 }

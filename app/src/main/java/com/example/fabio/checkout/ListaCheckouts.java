@@ -41,14 +41,14 @@ import java.util.LinkedList;
 public class ListaCheckouts extends AppCompatActivity {
 
     ListView listaCheckouts;
-    ArrayList<String> listItems = new ArrayList<String>();
-    ListAdapter adapter;
 
     LinkedList<Checkout> checkouts = new LinkedList<Checkout>();
 
     String TAG = "Response";
     String getCel;
     SoapPrimitive resultString;
+
+    Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +73,17 @@ public class ListaCheckouts extends AppCompatActivity {
         listaCheckouts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(),DetalleActivity.class);
+
+                //Toast.makeText(getApplicationContext(), String.valueOf(listaCheckouts.getAdapter().getItem(position)),Toast.LENGTH_LONG).show();
+
+
+                bundle = new Bundle();
+                bundle.putInt("CheckOut", checkouts.get(position).getNumCheckout());
+                bundle.putString("bodega", checkouts.get(position).getBodega());
+
+                Intent intent = new Intent(getApplicationContext(),ListaProductos.class);
+                intent.putExtras(bundle);
+
                 startActivity(intent);
             }
         });
@@ -82,7 +92,7 @@ public class ListaCheckouts extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_lista_checkouts, menu);
+        //getMenuInflater().inflate(R.menu.menu_lista_checkouts, menu);
         return true;
     }
 
@@ -99,10 +109,6 @@ public class ListaCheckouts extends AppCompatActivity {
         }*/
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void agregar(String x){
-        listItems.add(x);
     }
 
     private class AsyncCallWS extends AsyncTask<Void, Void, Void> {
@@ -124,16 +130,8 @@ public class ListaCheckouts extends AppCompatActivity {
             Log.i(TAG, "onPostExecute");
             if(resultString == null){
                 Toast.makeText(ListaCheckouts.this, "Estoy nulo", Toast.LENGTH_LONG).show();
-                agregar("hola1");
             }
             else{
-                //Toast.makeText(ListaCheckouts.this, "Response: " + resultString.toString(), Toast.LENGTH_LONG).show();
-                //adapter = new ArrayAdapter(getApplicationContext(),android.R.layout.simple_list_item_1,listItems);
-
-                //listaCheckouts.setAdapter(adapter);
-
-
-                //listaCheckouts.setBackgroundColor(Color.BLACK);
 
                 try {
                     JSONObject obj = new JSONObject(resultString.toString());
@@ -145,8 +143,7 @@ public class ListaCheckouts extends AppCompatActivity {
                             checkoutObj.setNumCheckout(listaCheckoutsJson.getJSONObject(i).getInt("checkout"));
                             checkoutObj.setCliente(listaCheckoutsJson.getJSONObject(i).getString("descripcion_cliente"));
                             checkoutObj.setAlistado(listaCheckoutsJson.getJSONObject(i).getString("alistado"));
-
-                            //listItems.add("checkout #" + String.valueOf(checkoutObj.getNumCheckout()) + "\n\n" + checkoutObj.cliente);
+                            checkoutObj.setAlistado(listaCheckoutsJson.getJSONObject(i).getString("bodega"));
 
                             checkouts.add(checkoutObj);
 
@@ -154,8 +151,6 @@ public class ListaCheckouts extends AppCompatActivity {
                         }
 
                         listaCheckouts.setAdapter(new CustomAdapter(ListaCheckouts.this, checkouts));
-
-                        //listaCheckouts.setBackgroundColor(Color.BLACK);
                     }
                     else{
                         Toast.makeText(getApplicationContext(),"Error al cargar checkouts",Toast.LENGTH_LONG).show();
