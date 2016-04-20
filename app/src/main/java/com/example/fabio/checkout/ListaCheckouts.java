@@ -1,7 +1,12 @@
 package com.example.fabio.checkout;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,6 +27,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
@@ -34,15 +41,14 @@ import java.util.LinkedList;
 public class ListaCheckouts extends AppCompatActivity {
 
     ListView listaCheckouts;
-
     ArrayList<String> listItems = new ArrayList<String>();
     ListAdapter adapter;
+
+    LinkedList<Checkout> checkouts = new LinkedList<Checkout>();
 
     String TAG = "Response";
     String getCel;
     SoapPrimitive resultString;
-
-    boolean primerInicio = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,46 +58,31 @@ public class ListaCheckouts extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         listaCheckouts = (ListView) findViewById(R.id.lv_checkouts);
-        AsyncCallWS x = new AsyncCallWS();
-        x.execute();
 
-        //leer json
+        AsyncCallWS webservices = new AsyncCallWS();
+        webservices.execute();
 
-        adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,listItems);
+        /*adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,listItems);
         listaCheckouts.setAdapter(adapter);
 
         listItems.add("checkout - 1");
         listItems.add("checkout - 2");
-        listItems.add("checkout - 3");
+        listItems.add("checkout - 3");*/
+
 
         listaCheckouts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(),"hoola",Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(),DetalleActivity.class);
                 startActivity(intent);
             }
         });
-
-
-        /*/cargar desde el json
-        if(primerInicio){
-            //leer json
-
-            adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,listItems);
-            listaCheckouts.setAdapter(adapter);
-            listItems.add(resultString.toString());
-        }
-        else{
-
-        }*/
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-       // getMenuInflater().inflate(R.menu.menu_lista_checkouts, menu);
+        getMenuInflater().inflate(R.menu.menu_lista_checkouts, menu);
         return true;
     }
 
@@ -103,30 +94,77 @@ public class ListaCheckouts extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void agregar(String x){
+        listItems.add(x);
     }
 
     private class AsyncCallWS extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
-            //Log.i(TAG, "onPreExecute");
+            Log.i(TAG, "onPreExecute");
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            //Log.i(TAG, "doInBackground");
+            Log.i(TAG, "doInBackground");
             calculate();
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
-            //Log.i(TAG, "onPostExecute");
+            Log.i(TAG, "onPostExecute");
+            if(resultString == null){
+                Toast.makeText(ListaCheckouts.this, "Estoy nulo", Toast.LENGTH_LONG).show();
+                agregar("hola1");
+            }
+            else{
+                //Toast.makeText(ListaCheckouts.this, "Response: " + resultString.toString(), Toast.LENGTH_LONG).show();
+                //adapter = new ArrayAdapter(getApplicationContext(),android.R.layout.simple_list_item_1,listItems);
+
+                //listaCheckouts.setAdapter(adapter);
+
+
+                //listaCheckouts.setBackgroundColor(Color.BLACK);
+
+                try {
+                    JSONObject obj = new JSONObject(resultString.toString());
+                    if(obj.getJSONArray("Table1").getJSONObject(0).getString("Error").equals("N")) {
+
+                        JSONArray listaCheckoutsJson = obj.getJSONArray("checkout");
+                        for (int i = 0; i < listaCheckoutsJson.length(); i++) {
+                            Checkout checkoutObj = new Checkout();
+                            checkoutObj.numCheckout = listaCheckoutsJson.getJSONObject(i).getInt("checkout");
+                            checkoutObj.cliente = listaCheckoutsJson.getJSONObject(i).getString("descripcion_cliente");
+                            checkoutObj.alistado = listaCheckoutsJson.getJSONObject(i).getString("alistado");
+
+                            listItems.add("checkout #" + String.valueOf(checkoutObj.numCheckout) + "\n\n" + checkoutObj.cliente);
+
+                            checkouts.add(checkoutObj);
+
+
+                        }
+
+                        listaCheckouts.setAdapter(new CustomAdapter(ListaCheckouts.this, listItems));
+
+                        //listaCheckouts.setBackgroundColor(Color.BLACK);
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(),"Error al cargar checkouts",Toast.LENGTH_LONG).show();
+                    }
+                }
+                catch (Exception ex){
+                    Log.i(TAG,"Error: "+ ex.getMessage());
+                }
+            }
         }
 
     }
@@ -151,12 +189,11 @@ public class ListaCheckouts extends AppCompatActivity {
 
             transport.call(SOAP_ACTION, soapEnvelope);
             resultString = (SoapPrimitive) soapEnvelope.getResponse();
-            Toast.makeText(this,"Ola q ace 2",Toast.LENGTH_SHORT).show();
-            listItems.add(resultString.getName());
+
             //Log.i(TAG, "Result Celsius: " + resultString);
             //Toast.makeText(this,"reusltado: "+resultString,Toast.LENGTH_LONG).show();
         } catch (Exception ex) {
-            //Log.e(TAG, "Error: " + ex.getMessage());
+            Log.e(TAG, "Error: " + ex.getMessage());
         }
     }
 }

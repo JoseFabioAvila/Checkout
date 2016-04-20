@@ -123,12 +123,12 @@ public class DetalleActivity extends AppCompatActivity {
 
             ListView listaDetalles = (ListView) rootView.findViewById(R.id.listDetalle);
             ListAdapter adapter;
-            adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,listItems);
+            /*adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,listItems);
             listaDetalles.setAdapter(adapter);
 
             listItems.add("checkout - 1");
             listItems.add("checkout - 2");
-            listItems.add("checkout - 3");
+            listItems.add("checkout - 3");*/
 
             return rootView;
         }
