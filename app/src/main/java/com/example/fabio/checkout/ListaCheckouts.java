@@ -142,18 +142,18 @@ public class ListaCheckouts extends AppCompatActivity {
                         JSONArray listaCheckoutsJson = obj.getJSONArray("checkout");
                         for (int i = 0; i < listaCheckoutsJson.length(); i++) {
                             Checkout checkoutObj = new Checkout();
-                            checkoutObj.numCheckout = listaCheckoutsJson.getJSONObject(i).getInt("checkout");
-                            checkoutObj.cliente = listaCheckoutsJson.getJSONObject(i).getString("descripcion_cliente");
-                            checkoutObj.alistado = listaCheckoutsJson.getJSONObject(i).getString("alistado");
+                            checkoutObj.setNumCheckout(listaCheckoutsJson.getJSONObject(i).getInt("checkout"));
+                            checkoutObj.setCliente(listaCheckoutsJson.getJSONObject(i).getString("descripcion_cliente"));
+                            checkoutObj.setAlistado(listaCheckoutsJson.getJSONObject(i).getString("alistado"));
 
-                            listItems.add("checkout #" + String.valueOf(checkoutObj.numCheckout) + "\n\n" + checkoutObj.cliente);
+                            //listItems.add("checkout #" + String.valueOf(checkoutObj.getNumCheckout()) + "\n\n" + checkoutObj.cliente);
 
                             checkouts.add(checkoutObj);
 
 
                         }
 
-                        listaCheckouts.setAdapter(new CustomAdapter(ListaCheckouts.this, listItems));
+                        listaCheckouts.setAdapter(new CustomAdapter(ListaCheckouts.this, checkouts));
 
                         //listaCheckouts.setBackgroundColor(Color.BLACK);
                     }

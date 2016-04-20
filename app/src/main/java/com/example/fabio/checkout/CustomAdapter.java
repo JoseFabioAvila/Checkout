@@ -8,18 +8,19 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Created by fabio on 19/04/2016.
  */
 public class CustomAdapter  extends BaseAdapter {
-    ArrayList<String> result;
+    LinkedList<Checkout> result;
     Context context;
     int [] imageId;
     private static LayoutInflater inflater=null;
 
 
-    public CustomAdapter(ListaCheckouts mainActivity, ArrayList<String> prgmNameList) {
+    public CustomAdapter(ListaCheckouts mainActivity, LinkedList<Checkout> prgmNameList) {
         // TODO Auto-generated constructor stub
         result=prgmNameList;
         context=mainActivity;
@@ -47,7 +48,9 @@ public class CustomAdapter  extends BaseAdapter {
     public class Holder
     {
         TextView tv;
+        TextView tv2;
     }
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
@@ -56,7 +59,11 @@ public class CustomAdapter  extends BaseAdapter {
         rowView = inflater.inflate(R.layout.list_item_checkout, null);
         holder.tv=(TextView) rowView.findViewById(R.id.numCheckout);
 
-        holder.tv.setText(result.get(position));
+        holder.tv.setText(result.get(position).getNumCheckout());
+
+        holder.tv2=(TextView) rowView.findViewById(R.id.cliente);
+
+        holder.tv2.setText(result.get(position).getCliente());
 
         return rowView;
     }
