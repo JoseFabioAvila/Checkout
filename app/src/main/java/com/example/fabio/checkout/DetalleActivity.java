@@ -77,8 +77,8 @@ public class DetalleActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        //mViewPager = (ViewPager) findViewById(R.id.container);
-        //mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
@@ -224,9 +224,25 @@ public class DetalleActivity extends AppCompatActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_detalle, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            View rootView = null;
+            if(getArguments().getInt(ARG_SECTION_NUMBER) == 1){
+                rootView = inflater.inflate(R.layout.fragment_detalle, container, false);
+                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+                textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+                textView.setText("controle el 1");
+            }
+            else if(getArguments().getInt(ARG_SECTION_NUMBER) == 2){
+                rootView = inflater.inflate(R.layout.fragment_detalle, container, false);
+                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+                textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+                textView.setText("controle el 2");
+            }
+            else if(getArguments().getInt(ARG_SECTION_NUMBER) == 3){
+                rootView = inflater.inflate(R.layout.fragment_detalle, container, false);
+                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+                textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+                textView.setText("controle el 3");
+            }
 
             /*adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,listItems);
             listaDetalles.setAdapter(adapter);

@@ -81,7 +81,8 @@ public class ListaCheckouts extends AppCompatActivity {
                 bundle.putInt("CheckOut", checkouts.get(position).getNumCheckout());
                 bundle.putString("bodega", checkouts.get(position).getBodega());
 
-                Intent intent = new Intent(getApplicationContext(),ListaProductos.class);
+                //Intent intent = new Intent(getApplicationContext(),ListaProductos.class);
+                Intent intent = new Intent(getApplicationContext(), DetalleActivity.class);
                 intent.putExtras(bundle);
 
                 startActivity(intent);
