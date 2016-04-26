@@ -47,6 +47,7 @@ public class ListaProductos extends AppCompatActivity
 
         codigo = getIntent().getExtras().getInt("CheckOut");
         bodega = getIntent().getExtras().getString("bodega");
+        //Toast.makeText(getApplicationContext(),bodega,Toast.LENGTH_LONG).show();
 
         listaProductos = (ListView) findViewById(R.id.lvProductosCheckout);
 

@@ -80,9 +80,10 @@ public class ListaCheckouts extends AppCompatActivity {
                 bundle = new Bundle();
                 bundle.putInt("CheckOut", checkouts.get(position).getNumCheckout());
                 bundle.putString("bodega", checkouts.get(position).getBodega());
+                //Toast.makeText(getApplicationContext(), resultString.toString(), Toast.LENGTH_LONG).show();
 
-                //Intent intent = new Intent(getApplicationContext(),ListaProductos.class);
-                Intent intent = new Intent(getApplicationContext(), DetalleActivity.class);
+                Intent intent = new Intent(getApplicationContext(),ListaProductos.class);
+                //Intent intent = new Intent(getApplicationContext(), DetalleActivity.class);
                 intent.putExtras(bundle);
 
                 startActivity(intent);
@@ -153,7 +154,7 @@ public class ListaCheckouts extends AppCompatActivity {
                             checkoutObj.setNumCheckout(listaCheckoutsJson.getJSONObject(i).getInt("checkout"));
                             checkoutObj.setCliente(listaCheckoutsJson.getJSONObject(i).getString("descripcion_cliente"));
                             checkoutObj.setAlistado(listaCheckoutsJson.getJSONObject(i).getString("alistado"));
-                            checkoutObj.setAlistado(listaCheckoutsJson.getJSONObject(i).getString("bodega"));
+                            checkoutObj.setBodega(listaCheckoutsJson.getJSONObject(i).getString("bodega"));
 
                             checkouts.add(checkoutObj);
 
