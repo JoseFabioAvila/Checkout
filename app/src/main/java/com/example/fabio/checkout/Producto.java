@@ -3,36 +3,54 @@ package com.example.fabio.checkout;
 /**
  * Created by fabio on 20/04/2016.
  */
-public class Producto {
-    private String cliente;
-    private int numCheckout;
-    private String alistado;
+public class Producto
+{
+    private String codigo;
+    private String nombre;
+    private String descripcion;
+    private String ubicacion;
+    private String cantidad;
 
-    Producto(){
-
+    public Producto() {
     }
 
-    public String getCliente() {
-        return cliente;
+    public String getCodigo() {
+        return codigo;
     }
 
-    public int getNumCheckout() {
-        return numCheckout;
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
-    public String getAlistado() {
-        return alistado;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setCliente(String cliente) {
-        this.cliente = cliente;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public void setNumCheckout(int numCheckout) {
-        this.numCheckout = numCheckout;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setAlistado(String alistado) {
-        this.alistado = alistado;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
+    public String getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(String cantidad) {
+        this.cantidad = cantidad;
     }
 }

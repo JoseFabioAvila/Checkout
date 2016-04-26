@@ -60,11 +60,11 @@ public class CustomAdapterProducto  extends BaseAdapter {
         rowView = inflater.inflate(R.layout.list_item_producto, null);
         holder.tv=(TextView) rowView.findViewById(R.id.numCheckout);
 
-        holder.tv.setText("Checkout - #"+String.valueOf(result.get(position).getNumCheckout()));
+        holder.tv.setText("Checkout - #"+String.valueOf(result.get(position).getCodigo()));
 
         holder.tv2=(TextView) rowView.findViewById(R.id.cliente);
 
-        holder.tv2.setText("Cliente - "+result.get(position).getCliente());
+        holder.tv2.setText("Cliente - "+result.get(position).getCodigo());
         return rowView;
     }
 }

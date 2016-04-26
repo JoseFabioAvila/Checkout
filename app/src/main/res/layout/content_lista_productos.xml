@@ -12,11 +12,4 @@
     tools:context="com.example.fabio.checkout.ListaProductos"
     tools:showIn="@layout/activity_lista_productos">
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/lv_productos"
-        android:layout_alignParentStart="true"
-        android:foreground="@color/Black"/>
-
 </RelativeLayout>

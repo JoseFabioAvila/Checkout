@@ -93,7 +93,7 @@ public class ListaCheckouts extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_lista_checkouts, menu);
+        getMenuInflater().inflate(R.menu.menu_lista_checkouts, menu);
         return true;
     }
 
@@ -105,9 +105,18 @@ public class ListaCheckouts extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_settings) {
+        if (id == R.id.action_settings) {
+            bundle = new Bundle();
+            bundle.putInt("CheckOut", 111);
+            bundle.putString("bodega", "12");
+
+            //Intent intent = new Intent(getApplicationContext(),ListaProductos.class);
+            Intent intent = new Intent(getApplicationContext(), DetalleActivity.class);
+            intent.putExtras(bundle);
+
+            startActivity(intent);
             return true;
-        }*/
+        }
 
         return super.onOptionsItemSelected(item);
     }

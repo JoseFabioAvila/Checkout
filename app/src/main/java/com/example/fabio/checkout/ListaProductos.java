@@ -22,8 +22,8 @@ import org.ksoap2.transport.HttpTransportSE;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class ListaProductos extends AppCompatActivity {
-
+public class ListaProductos extends AppCompatActivity
+{
     ListView listaProductos;
 
     LinkedList<Producto> productos = new LinkedList<Producto>();
@@ -38,7 +38,8 @@ public class ListaProductos extends AppCompatActivity {
     public ArrayList<String> listItems = new ArrayList<String>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_productos);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -47,13 +48,14 @@ public class ListaProductos extends AppCompatActivity {
         codigo = getIntent().getExtras().getInt("CheckOut");
         bodega = getIntent().getExtras().getString("bodega");
 
-        listaProductos = (ListView) findViewById(R.id.lv_productos);
+        listaProductos = (ListView) findViewById(R.id.lvProductosCheckout);
 
         AsyncCallWS webservices = new AsyncCallWS();
         webservices.execute();
     }
 
-    private class AsyncCallWS extends AsyncTask<Void, Void, Void> {
+    private class AsyncCallWS extends AsyncTask<Void, Void, Void>
+    {
 
         @Override
         protected void onPreExecute() {
@@ -82,9 +84,9 @@ public class ListaProductos extends AppCompatActivity {
                         JSONArray listaCheckoutsJson = obj.getJSONArray("detalles_checkout");
                         for (int i = 0; i < listaCheckoutsJson.length(); i++) {
                             Producto checkoutObj = new Producto();
-                            checkoutObj.setNumCheckout(listaCheckoutsJson.getJSONObject(i).getInt("checkout"));
-                            checkoutObj.setCliente(listaCheckoutsJson.getJSONObject(i).getString("descripcion"));
-                            checkoutObj.setAlistado(listaCheckoutsJson.getJSONObject(i).getString("articulo"));
+                            checkoutObj.setCodigo(listaCheckoutsJson.getJSONObject(i).getString("checkout"));
+                            checkoutObj.setCodigo(listaCheckoutsJson.getJSONObject(i).getString("descripcion"));
+                            checkoutObj.setCodigo(listaCheckoutsJson.getJSONObject(i).getString("articulo"));
 
                             productos.add(checkoutObj);
                         }
@@ -135,5 +137,4 @@ public class ListaProductos extends AppCompatActivity {
             Log.e(TAG, "Error 1: " + ex.getMessage());
         }
     }
-
 }

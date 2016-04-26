@@ -3,6 +3,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_detalle">#Checkout Cliente</string>
     <string name="section_format">Hello World from section: %1$d</string>
-    <string name="title_activity_productos">ProductosActivity</string>
-    <string name="title_activity_lista_productos">ListaProductos</string>
+    <string name="title_activity_productos">Productos Activity</string>
+    <string name="title_activity_lista_productos">Lista Productos</string>
 </resources>
