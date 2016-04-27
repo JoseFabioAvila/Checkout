@@ -24,10 +24,6 @@
             android:name=".DetalleActivity"
             android:label="@string/title_activity_detalle"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ListaProductos"
-            android:label="@string/title_activity_lista_productos"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

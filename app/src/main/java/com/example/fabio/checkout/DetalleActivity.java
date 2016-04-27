@@ -132,7 +132,6 @@ public class DetalleActivity extends AppCompatActivity
                             productos.add(checkoutObj);
                         }
 
-                        //listaProductos.setAdapter(new CustomAdapterProducto(DetalleActivity.this, productos));
                     }
                     else
                     {
@@ -249,9 +248,9 @@ public class DetalleActivity extends AppCompatActivity
 
                 listView.setAdapter(adapter);
 
-                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+                /*TextView textView = (TextView) rootView.findViewById(R.id.section_label);
                 textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-                textView.setText("controle el 1");
+                textView.setText("controle el 1");*/
             }
             else if(getArguments().getInt(ARG_SECTION_NUMBER) == 2)
             {
@@ -266,9 +265,9 @@ public class DetalleActivity extends AppCompatActivity
 
                 listView.setAdapter(adapter);
 
-                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+                /*TextView textView = (TextView) rootView.findViewById(R.id.section_label);
                 textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-                textView.setText("controle el 2");
+                textView.setText("controle el 2");*/
             }
             else if(getArguments().getInt(ARG_SECTION_NUMBER) == 3)
             {
@@ -283,9 +282,9 @@ public class DetalleActivity extends AppCompatActivity
 
                 listView.setAdapter(adapter);
 
-                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+                /*TextView textView = (TextView) rootView.findViewById(R.id.section_label);
                 textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-                textView.setText("controle el 3");
+                textView.setText("controle el 3");*/
             }
 
             /*adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,listItems);
