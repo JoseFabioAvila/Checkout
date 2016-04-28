@@ -83,8 +83,11 @@ public class DetalleActivity extends AppCompatActivity
         tabLayout.setupWithViewPager(mViewPager);
         //tabLayout.setupWithViewPager(null);
 
-        //AsyncCallWS webservices = new AsyncCallWS();
-        //webservices.execute();
+        AsyncCallWS webservices = new AsyncCallWS();
+        webservices.execute();
+
+        this.setTitle("#"+getIntent().getExtras().getInt("CheckOut") + " - " +
+                getIntent().getExtras().getString("cliente"));
 
         lvProductosCheckout = (ListView) findViewById(R.id.lvProductosCheckout);
     }
@@ -102,6 +105,7 @@ public class DetalleActivity extends AppCompatActivity
         {
             Log.i(TAG, "doInBackground");
             calculate();
+            Toast.makeText(getApplicationContext(), "reusltado: "+resultString, Toast.LENGTH_LONG).show();
             return null;
         }
 
@@ -126,8 +130,10 @@ public class DetalleActivity extends AppCompatActivity
                         {
                             Producto checkoutObj = new Producto();
                             checkoutObj.setCodigo(listaCheckoutsJson.getJSONObject(i).getString("checkout"));
-                            checkoutObj.setCodigo(listaCheckoutsJson.getJSONObject(i).getString("descripcion_cliente"));
-                            checkoutObj.setCodigo(listaCheckoutsJson.getJSONObject(i).getString("alistado"));
+                            checkoutObj.setNombre(listaCheckoutsJson.getJSONObject(i).getString("checkout"));
+                            checkoutObj.setDescripcion(listaCheckoutsJson.getJSONObject(i).getString("checkout"));
+                            checkoutObj.setUbicacion(listaCheckoutsJson.getJSONObject(i).getString("checkout"));
+                            checkoutObj.setCantidad(listaCheckoutsJson.getJSONObject(i).getString("checkout"));
 
                             productos.add(checkoutObj);
                         }
@@ -140,7 +146,7 @@ public class DetalleActivity extends AppCompatActivity
                 }
                 catch (Exception ex)
                 {
-                    Log.i(TAG,"Error: "+ ex.getMessage());
+                    Log.i(TAG,"Error2: "+ ex.getMessage());
                 }
             }
         }
@@ -149,8 +155,8 @@ public class DetalleActivity extends AppCompatActivity
     public void calculate()
     {
         //http://ncqservices.com:82/wsCheckout/wsCheckout.asmx?op=traerEncabezadoCheckout
-        String SOAP_ACTION = "http://tempuri.org/traerEncabezadoCheckout";
-        String METHOD_NAME = "traerEncabezadoCheckout";
+        String SOAP_ACTION = "http://tempuri.org/traerDetalleCheckout";
+        String METHOD_NAME = "traerDetalleCheckout";
         String NAMESPACE = "http://tempuri.org/";
         String URL = "http://ncqservices.com:82/wsCheckout/wsCheckout.asmx";
 
@@ -159,6 +165,8 @@ public class DetalleActivity extends AppCompatActivity
             SoapObject Request = new SoapObject(NAMESPACE, METHOD_NAME);
             Request.addProperty("usuario","admin");
             Request.addProperty("clave", "0");
+            Request.addProperty("pBodega",getIntent().getExtras().getString("bodega"));
+            Request.addProperty("pCheckOut",getIntent().getExtras().getString("CheckOut"));
 
             SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
             soapEnvelope.dotNet = true;
@@ -174,7 +182,7 @@ public class DetalleActivity extends AppCompatActivity
         }
         catch (Exception ex)
         {
-            Log.e(TAG, "Error: " + ex.getMessage());
+            Log.e(TAG, "Error1: " + ex.getMessage());
         }
     }
 
@@ -182,7 +190,7 @@ public class DetalleActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_detalle, menu);
+        //getMenuInflater().inflate(R.menu.menu_detalle, menu);
         return true;
     }
 

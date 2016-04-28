@@ -1,28 +1,15 @@
 package com.example.fabio.checkout;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Intent;
-import android.database.DataSetObserver;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -35,7 +22,6 @@ import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class ListaCheckouts extends AppCompatActivity {
@@ -80,6 +66,7 @@ public class ListaCheckouts extends AppCompatActivity {
                 bundle = new Bundle();
                 bundle.putInt("CheckOut", checkouts.get(position).getNumCheckout());
                 bundle.putString("bodega", checkouts.get(position).getBodega());
+                bundle.putString("cliente", checkouts.get(position).getCliente());
                 //Toast.makeText(getApplicationContext(), resultString.toString(), Toast.LENGTH_LONG).show();
 
                 //Intent intent = new Intent(getApplicationContext(),ListaProductos.class);
@@ -132,7 +119,7 @@ public class ListaCheckouts extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             Log.i(TAG, "doInBackground");
-            calculate();
+            traerCheckouts();
             return null;
         }
 
@@ -168,14 +155,14 @@ public class ListaCheckouts extends AppCompatActivity {
                     }
                 }
                 catch (Exception ex){
-                    Log.i(TAG,"Error: "+ ex.getMessage());
+                    Log.i(TAG,"Error2: "+ ex.getMessage());
                 }
             }
         }
 
     }
 
-    public void calculate() {
+    public void traerCheckouts() {
         //http://ncqservices.com:82/wsCheckout/wsCheckout.asmx?op=traerEncabezadoCheckout
         String SOAP_ACTION = "http://tempuri.org/traerEncabezadoCheckout";
         String METHOD_NAME = "traerEncabezadoCheckout";
@@ -196,10 +183,10 @@ public class ListaCheckouts extends AppCompatActivity {
             transport.call(SOAP_ACTION, soapEnvelope);
             resultString = (SoapPrimitive) soapEnvelope.getResponse();
 
-            //Log.i(TAG, "Result Celsius: " + resultString);
+            //Log.i(TAG, "Resultado: " + resultString);
             //Toast.makeText(this,"reusltado: "+resultString,Toast.LENGTH_LONG).show();
         } catch (Exception ex) {
-            Log.e(TAG, "Error: " + ex.getMessage());
+            Log.e(TAG, "Error1: " + ex.getMessage());
         }
     }
 }
