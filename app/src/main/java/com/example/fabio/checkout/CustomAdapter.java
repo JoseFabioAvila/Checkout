@@ -28,8 +28,7 @@ public class CustomAdapter  extends BaseAdapter {
         // TODO Auto-generated constructor stub
         result=prgmNameList;
         context=mainActivity;
-        inflater = ( LayoutInflater )context.
-                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = ( LayoutInflater )context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
     @Override
     public int getCount() {

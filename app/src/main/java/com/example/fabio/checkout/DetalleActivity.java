@@ -71,23 +71,12 @@ public class DetalleActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-        //tabLayout.setupWithViewPager(null);
 
         AsyncCallWS webservices = new AsyncCallWS();
         webservices.execute();
 
-        this.setTitle("#"+getIntent().getExtras().getInt("CheckOut") + " - " +
-                getIntent().getExtras().getString("cliente"));
+        this.setTitle(getIntent().getExtras().getString("cliente") + "\nCheckout - #" + getIntent().getExtras().getInt("CheckOut"));
 
         lvProductosCheckout = (ListView) findViewById(R.id.lvProductosCheckout);
     }
@@ -97,7 +86,9 @@ public class DetalleActivity extends AppCompatActivity
         @Override
         protected void onPreExecute()
         {
+
             Log.i(TAG, "onPreExecute");
+
         }
 
         @Override
@@ -105,13 +96,13 @@ public class DetalleActivity extends AppCompatActivity
         {
             Log.i(TAG, "doInBackground");
             calculate();
-            Toast.makeText(getApplicationContext(), "reusltado: "+resultString, Toast.LENGTH_LONG).show();
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result)
         {
+
             Log.i(TAG, "onPostExecute");
 
             if(resultString == null)
@@ -123,17 +114,23 @@ public class DetalleActivity extends AppCompatActivity
                 try
                 {
                     JSONObject obj = new JSONObject(resultString.toString());
+                    //Toast.makeText(getApplicationContext(), "reusltado: "+resultString.toString(), Toast.LENGTH_LONG).show();
                     if(obj.getJSONArray("Table1").getJSONObject(0).getString("Error").equals("N"))
                     {
-                        JSONArray listaCheckoutsJson = obj.getJSONArray("checkout");
+                        JSONArray listaCheckoutsJson = obj.getJSONArray("detalles_checkout");
                         for (int i = 0; i < listaCheckoutsJson.length(); i++)
                         {
                             Producto checkoutObj = new Producto();
-                            checkoutObj.setCodigo(listaCheckoutsJson.getJSONObject(i).getString("checkout"));
-                            checkoutObj.setNombre(listaCheckoutsJson.getJSONObject(i).getString("checkout"));
-                            checkoutObj.setDescripcion(listaCheckoutsJson.getJSONObject(i).getString("checkout"));
-                            checkoutObj.setUbicacion(listaCheckoutsJson.getJSONObject(i).getString("checkout"));
-                            checkoutObj.setCantidad(listaCheckoutsJson.getJSONObject(i).getString("checkout"));
+                            checkoutObj.setCodigo("12334");
+                            checkoutObj.setNombre(listaCheckoutsJson.getJSONObject(i).getString("articulo"));
+                            checkoutObj.setDescripcion(listaCheckoutsJson.getJSONObject(i).getString("descripcion"));
+                            if(listaCheckoutsJson.getJSONObject(i).getString("ubicacion") != null){
+                                checkoutObj.setUbicacion(listaCheckoutsJson.getJSONObject(i).getString("ubicacion"));
+                            }
+                            else{
+                                checkoutObj.setUbicacion("nula");
+                            }
+                            checkoutObj.setCantidad(String.valueOf(listaCheckoutsJson.getJSONObject(i).getDouble("cantidad_factura")));
 
                             productos.add(checkoutObj);
                         }
@@ -149,6 +146,17 @@ public class DetalleActivity extends AppCompatActivity
                     Log.i(TAG,"Error2: "+ ex.getMessage());
                 }
             }
+            // Create the adapter that will return a fragment for each of the three
+            // primary sections of the activity.
+            mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), productos, DetalleActivity.this);
+
+            // Set up the ViewPager with the sections adapter.
+            mViewPager = (ViewPager) findViewById(R.id.container);
+            mViewPager.setAdapter(mSectionsPagerAdapter);
+
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+            tabLayout.setupWithViewPager(mViewPager);
+            //tabLayout.setupWithViewPager(null);
         }
     }
 
@@ -166,7 +174,7 @@ public class DetalleActivity extends AppCompatActivity
             Request.addProperty("usuario","admin");
             Request.addProperty("clave", "0");
             Request.addProperty("pBodega",getIntent().getExtras().getString("bodega"));
-            Request.addProperty("pCheckOut",getIntent().getExtras().getString("CheckOut"));
+            Request.addProperty("pCheckOut",String.valueOf(getIntent().getExtras().getInt("CheckOut")));
 
             SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
             soapEnvelope.dotNet = true;
@@ -221,6 +229,9 @@ public class DetalleActivity extends AppCompatActivity
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
 
+        private static LinkedList<Producto> products;
+        private static DetalleActivity z;
+
         public PlaceholderFragment()
         {
         }
@@ -229,10 +240,12 @@ public class DetalleActivity extends AppCompatActivity
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber)
+        public static PlaceholderFragment newInstance(int sectionNumber, LinkedList<Producto> prod, DetalleActivity y)
         {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
+            products = prod;
+            z = y;
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
             return fragment;
@@ -246,13 +259,15 @@ public class DetalleActivity extends AppCompatActivity
             if(getArguments().getInt(ARG_SECTION_NUMBER) == 1)
             {
 
-                cargarProductos(1);
+                //cargarProductos(1);
                 //setListViewProductosCheckout();
 
                 rootView = inflater.inflate(R.layout.fragment_detalle, container, false);
                 //Toast.makeText(rootView.getContext(), "Section 3", Toast.LENGTH_SHORT).show();
                 ListView listView = (ListView) rootView.findViewById(R.id.lvProductosCheckout);
-                CustomListView adapter = new CustomListView(getActivity(), codigos, nombres, descripciones, ubicaciones, cantidades);
+                //CustomListView adapter = new CustomListView(getActivity(), codigos, nombres, descripciones, ubicaciones, cantidades);
+
+                CustomAdapterDetalle adapter = new CustomAdapterDetalle(getActivity(), products);
 
                 listView.setAdapter(adapter);
 
@@ -269,7 +284,11 @@ public class DetalleActivity extends AppCompatActivity
                 rootView = inflater.inflate(R.layout.fragment_detalle, container, false);
                 //Toast.makeText(rootView.getContext(), "Section 3", Toast.LENGTH_SHORT).show();
                 ListView listView = (ListView) rootView.findViewById(R.id.lvProductosCheckout);
-                CustomListView adapter = new CustomListView(getActivity(), codigos, nombres, descripciones, ubicaciones, cantidades);
+                //CustomListView adapter = new CustomListView(getActivity(), codigos, nombres, descripciones, ubicaciones, cantidades);
+
+                //listView.setAdapter(adapter);
+
+                CustomAdapterDetalle adapter = new CustomAdapterDetalle(getActivity(), products);
 
                 listView.setAdapter(adapter);
 
@@ -392,9 +411,14 @@ public class DetalleActivity extends AppCompatActivity
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter
     {
-        public SectionsPagerAdapter(FragmentManager fm)
+        LinkedList<Producto> prod;
+        DetalleActivity y;
+
+        public SectionsPagerAdapter(FragmentManager fm, LinkedList<Producto> pro, DetalleActivity x)
         {
             super(fm);
+            this.prod = pro;
+            this.y = x;
         }
 
         @Override
@@ -402,7 +426,7 @@ public class DetalleActivity extends AppCompatActivity
         {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            return PlaceholderFragment.newInstance(position + 1, prod, y);
         }
 
         @Override

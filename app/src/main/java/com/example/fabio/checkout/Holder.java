@@ -9,5 +9,7 @@ import android.widget.TextView;
 public class Holder {
     TextView tv;
     TextView tv2;
+    TextView tv3;
+    TextView tv4;
     LinearLayout ly;
 }
