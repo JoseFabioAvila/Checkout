@@ -60,6 +60,7 @@ public class CustomAdapter  extends BaseAdapter {
         // TODO Auto-generated method stub
         //Holder holder=new Holder();
         View rowView;
+
         rowView = inflater.inflate(R.layout.list_item_checkout, null);
         holder.tv=(TextView) rowView.findViewById(R.id.numCheckout);
 

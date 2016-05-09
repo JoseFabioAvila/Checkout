@@ -1,6 +1,7 @@
 package com.example.fabio.checkout;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -69,6 +70,8 @@ public class DetalleActivity extends AppCompatActivity
         setContentView(R.layout.activity_detalle);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setSubtitleTextColor(Color.WHITE);
+        toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
 
@@ -155,7 +158,9 @@ public class DetalleActivity extends AppCompatActivity
             mViewPager.setAdapter(mSectionsPagerAdapter);
 
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+            tabLayout.setTabTextColors(Color.WHITE,Color.parseColor("#FF661B"));
             tabLayout.setupWithViewPager(mViewPager);
+            //tabLayout.setTabTextColors();
             //tabLayout.setupWithViewPager(null);
         }
     }
@@ -267,7 +272,16 @@ public class DetalleActivity extends AppCompatActivity
                 ListView listView = (ListView) rootView.findViewById(R.id.lvProductosCheckout);
                 //CustomListView adapter = new CustomListView(getActivity(), codigos, nombres, descripciones, ubicaciones, cantidades);
 
+                Producto x = new Producto();
+                x.setCodigo("");
+                x.setCantidad("0");
+                x.setDescripcion("");
+                x.setNombre("");
+                x.setUbicacion("");
+                products.add(x);
+
                 CustomAdapterDetalle adapter = new CustomAdapterDetalle(getActivity(), products);
+
 
                 listView.setAdapter(adapter);
 
@@ -287,6 +301,14 @@ public class DetalleActivity extends AppCompatActivity
                 //CustomListView adapter = new CustomListView(getActivity(), codigos, nombres, descripciones, ubicaciones, cantidades);
 
                 //listView.setAdapter(adapter);
+
+                /*Producto x = new Producto();
+                x.setCodigo("");
+                x.setCantidad("0");
+                x.setDescripcion("");
+                x.setNombre("");
+                x.setUbicacion("");
+                products.add(x);*/
 
                 CustomAdapterDetalle adapter = new CustomAdapterDetalle(getActivity(), products);
 
