@@ -13,18 +13,33 @@ import java.util.LinkedList;
 /**
  * Created by fabio on 28/4/2016.
  */
+
 public class CustomAdapterDetalle  extends BaseAdapter {
+    View.OnTouchListener mTouchListener;
+
     LinkedList<Producto> result;
     Context context;
     private static LayoutInflater inflater = null;
     Holder holder = new Holder();
+    String tipoLista;
 
 
-    public CustomAdapterDetalle(Activity mainActivity, LinkedList<Producto> prgmNameList) {
+    public CustomAdapterDetalle(Activity mainActivity, LinkedList<Producto> prgmNameList, View.OnTouchListener listener, String tLista) {
         // TODO Auto-generated constructor stub
         result = prgmNameList;
         context = mainActivity;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mTouchListener = listener;
+        tipoLista = tLista;
+    }
+
+    public CustomAdapterDetalle(Activity mainActivity, LinkedList<Producto> prgmNameList, String tLista) {
+        // TODO Auto-generated constructor stub
+        result = prgmNameList;
+        context = mainActivity;
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mTouchListener = null;
+        tipoLista = tLista;
     }
 
     @Override
@@ -36,13 +51,17 @@ public class CustomAdapterDetalle  extends BaseAdapter {
     @Override
     public Object getItem(int position) {
         // TODO Auto-generated method stub
-        return position;
+        return tipoLista;
     }
 
     @Override
     public long getItemId(int position) {
         // TODO Auto-generated method stub
         return position;
+    }
+
+    public String getTipoLista(){
+        return tipoLista;
     }
 
     public Holder getHolder() {
@@ -70,6 +89,15 @@ public class CustomAdapterDetalle  extends BaseAdapter {
         holder.tv4 = (TextView) rowView.findViewById(R.id.cantidad);
         holder.tv4.setText(result.get(position).getCantidad());
 
+        if (mTouchListener != null) {
+            rowView.setOnTouchListener(mTouchListener);
+        }
+
         return rowView;
+    }
+
+    public void remove(int pos) {
+        result.remove(pos);
+        CustomAdapterDetalle.this.notifyDataSetChanged();
     }
 }
