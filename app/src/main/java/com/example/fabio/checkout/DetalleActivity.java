@@ -105,9 +105,16 @@ public class DetalleActivity extends AppCompatActivity {
                             checkoutObj.setCodigo("12334");
                             checkoutObj.setDescripcion(listaCheckoutsJson.getJSONObject(i).getString("descripcion"));
                             if(listaCheckoutsJson.getJSONObject(i).getString("ubicacion") != null)
-                                checkoutObj.setUbicacion(listaCheckoutsJson.getJSONObject(i).getString("ubicacion"));
+                            {
+                                if(listaCheckoutsJson.getJSONObject(i).getString("ubicacion").equals("null"))
+                                {
+                                    checkoutObj.setUbicacion("");
+                                }
+                                else
+                                    checkoutObj.setUbicacion(listaCheckoutsJson.getJSONObject(i).getString("ubicacion"));
+                            }
                             else
-                                checkoutObj.setUbicacion("nula");
+                                checkoutObj.setUbicacion("");
                             checkoutObj.setCantidad(String.valueOf(listaCheckoutsJson.getJSONObject(i).getDouble("cantidad_factura")));
                             todo.add(checkoutObj);
                             pendientes.add(checkoutObj);

@@ -85,12 +85,14 @@ public class CustomAdapterDetalle  extends BaseAdapter {
         //holder.tv2.setTypeface(null, Typeface.BOLD);
 
         holder.tv3 = (TextView) rowView.findViewById(R.id.ubicacion);
-        holder.tv3.setText("Ubic: "+result.get(position).getUbicacion());
+        //holder.tv3.setText("Ubic: "+result.get(position).getUbicacion());
+        holder.tv3.setText(result.get(position).getUbicacion());
         holder.tv3.setTextColor(Color.parseColor("#FF661B"));
         //holder.tv3.setTypeface(null, Typeface.BOLD);
 
         holder.tv4 = (TextView) rowView.findViewById(R.id.cantidad);
-        holder.tv4.setText("Cant: "+result.get(position).getCantidad());
+        //holder.tv4.setText("Cant: "+result.get(position).getCantidad());
+        holder.tv4.setText(result.get(position).getCantidad());
         holder.tv4.setTextColor(Color.parseColor("#FF661B"));
         //holder.tv4.setTypeface(null, Typeface.BOLD);
 
