@@ -2,6 +2,8 @@ package com.example.fabio.checkout;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,17 +79,20 @@ public class CustomAdapterDetalle  extends BaseAdapter {
         View rowView;
         rowView = inflater.inflate(R.layout.list_item_detalle, null);
 
-        holder.tv = (TextView) rowView.findViewById(R.id.nombre);
-        holder.tv.setText(String.valueOf(result.get(position).getNombre()));
-
         holder.tv2 = (TextView) rowView.findViewById(R.id.descripcion);
         holder.tv2.setText(result.get(position).getDescripcion());
+        //holder.tv2.setTextColor(Color.parseColor("#212121"));
+        //holder.tv2.setTypeface(null, Typeface.BOLD);
 
         holder.tv3 = (TextView) rowView.findViewById(R.id.ubicacion);
-        holder.tv3.setText(result.get(position).getUbicacion());
+        holder.tv3.setText("Ubic: "+result.get(position).getUbicacion());
+        holder.tv3.setTextColor(Color.parseColor("#FF661B"));
+        //holder.tv3.setTypeface(null, Typeface.BOLD);
 
         holder.tv4 = (TextView) rowView.findViewById(R.id.cantidad);
-        holder.tv4.setText(result.get(position).getCantidad());
+        holder.tv4.setText("Cant: "+result.get(position).getCantidad());
+        holder.tv4.setTextColor(Color.parseColor("#FF661B"));
+        //holder.tv4.setTypeface(null, Typeface.BOLD);
 
         if (mTouchListener != null) {
             rowView.setOnTouchListener(mTouchListener);

@@ -60,15 +60,16 @@ public class CustomAdapter  extends BaseAdapter {
         // TODO Auto-generated method stub
         //Holder holder=new Holder();
         View rowView;
-
         rowView = inflater.inflate(R.layout.list_item_checkout, null);
-        holder.tv=(TextView) rowView.findViewById(R.id.numCheckout);
 
-        holder.tv.setText("Checkout - #"+String.valueOf(result.get(position).getNumCheckout()));
+        holder.tv=(TextView) rowView.findViewById(R.id.numCheckout);
+        holder.tv.setText( "Checkout:    #"+String.valueOf(result.get(position).getNumCheckout()));
+        //holder.tv.setTextColor(Color.parseColor("#212121"));
 
         holder.tv2=(TextView) rowView.findViewById(R.id.cliente);
+        holder.tv2.setText("Cliente:                "+result.get(position).getCliente());
+        //holder.tv2.setTextColor(Color.parseColor("#212121"));
 
-        holder.tv2.setText("Cliente - "+result.get(position).getCliente());
         return rowView;
     }
 }

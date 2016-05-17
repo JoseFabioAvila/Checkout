@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -68,11 +69,13 @@ public class DetalleActivity extends AppCompatActivity {
         getSupportActionBar().setLogo(R.mipmap.ic_launcher);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         AsyncCallWS webservices = new AsyncCallWS();
         webservices.execute();
 
         this.setTitle(getIntent().getExtras().getString("cliente"));
-        toolbar.setSubtitle("Checkout - #" + getIntent().getExtras().getInt("CheckOut"));
+        toolbar.setSubtitle("Checkout  " + getIntent().getExtras().getInt("CheckOut"));
 
         lvProductosCheckout = (ListView) findViewById(R.id.lvProductosCheckout);
     }
@@ -100,7 +103,6 @@ public class DetalleActivity extends AppCompatActivity {
                         for (int i = 0; i < listaCheckoutsJson.length(); i++){
                             Producto checkoutObj = new Producto();
                             checkoutObj.setCodigo("12334");
-                            checkoutObj.setNombre(listaCheckoutsJson.getJSONObject(i).getString("articulo"));
                             checkoutObj.setDescripcion(listaCheckoutsJson.getJSONObject(i).getString("descripcion"));
                             if(listaCheckoutsJson.getJSONObject(i).getString("ubicacion") != null)
                                 checkoutObj.setUbicacion(listaCheckoutsJson.getJSONObject(i).getString("ubicacion"));
@@ -120,9 +122,11 @@ public class DetalleActivity extends AppCompatActivity {
             // primary sections of the activity.
             mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), todo, procesados, pendientes, DetalleActivity.this);
 
+
             // Set up the ViewPager with the sections adapter.
             mViewPager = (ViewPager) findViewById(R.id.container);
             mViewPager.setAdapter(mSectionsPagerAdapter);
+            //onTouchEvent
 
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
             tabLayout.setTabTextColors(Color.WHITE,Color.parseColor("#FF661B"));
@@ -188,15 +192,11 @@ public class DetalleActivity extends AppCompatActivity {
     public static class PlaceholderFragment extends Fragment
     {
         ///////////////////////////////////////////////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////////////////////////////
         private boolean mSwiping = false; // detects if user is swiping on ACTION_UP
         private boolean mItemPressed = false; // Detects if user is currently holding down a view
         private static final int SWIPE_DURATION = 250; // needed for velocity implementation
         private static final int MOVE_DURATION = 150;
         HashMap<Long, Integer> mItemIdTopMap = new HashMap<Long, Integer>();
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////
 
         /**
@@ -499,6 +499,8 @@ public class DetalleActivity extends AppCompatActivity {
             this.pendientes2 = pendiente;
             this.y = x;
         }
+
+
 
         @Override
         public Fragment getItem(int position){

@@ -3,13 +3,18 @@ package com.example.fabio.checkout;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -24,7 +29,7 @@ import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.LinkedList;
 
-public class ListaCheckouts extends AppCompatActivity {
+public class ListaCheckouts extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     ListView listaCheckouts;
 
@@ -44,6 +49,7 @@ public class ListaCheckouts extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         listaCheckouts = (ListView) findViewById(R.id.lv_checkouts);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         AsyncCallWS webservices = new AsyncCallWS();
         webservices.execute();
@@ -55,6 +61,10 @@ public class ListaCheckouts extends AppCompatActivity {
         listItems.add("checkout - 2");
         listItems.add("checkout - 3");*/
 
+        getSupportActionBar().setLogo(R.drawable.logo);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+
+        setTitle("");
 
         listaCheckouts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -81,8 +91,13 @@ public class ListaCheckouts extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_lista_checkouts, menu);
-        return true;
+        getMenuInflater().inflate(R.menu.menu_lista_checkouts, menu);
+
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.buscar));
+
+        //searchView.setOnQueryTextListener(this);
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -93,20 +108,19 @@ public class ListaCheckouts extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            bundle = new Bundle();
-            bundle.putInt("CheckOut", 111);
-            bundle.putString("bodega", "12");
-
-            //Intent intent = new Intent(getApplicationContext(),ListaProductos.class);
-            Intent intent = new Intent(getApplicationContext(), DetalleActivity.class);
-            intent.putExtras(bundle);
-
-            startActivity(intent);
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        Toast.makeText(getApplicationContext(), "Artículo registrado con éxito", Toast.LENGTH_SHORT).show();
+        return false;
     }
 
     private class AsyncCallWS extends AsyncTask<Void, Void, Void> {
