@@ -138,8 +138,8 @@ public class DetalleActivity extends AppCompatActivity {
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
             tabLayout.setTabTextColors(Color.WHITE,Color.parseColor("#FF661B"));
             tabLayout.setupWithViewPager(mViewPager);
-            //tabLayout.setTabTextColors();
-            //tabLayout.setupWithViewPager(null);
+
+            mViewPager.setCurrentItem(tabLayout.getTabAt(1).getPosition());
         }
     }
 
@@ -318,11 +318,11 @@ public class DetalleActivity extends AppCompatActivity {
                                 v.setEnabled(false); // need to disable the view for the animation to run
 
                                 // stacked the animations to have the pause before the views flings off screen
-                                v.animate().setDuration(300).translationX(-v.getWidth()/3).withEndAction(new Runnable() {
+                                v.animate().setDuration(300).translationX(v.getWidth()/3).withEndAction(new Runnable() {
                                     @Override
                                     public void run()
                                     {
-                                        v.animate().setDuration(300).alpha(0).translationX(-v.getWidth()).withEndAction(new Runnable()
+                                        v.animate().setDuration(300).alpha(0).translationX(v.getWidth()).withEndAction(new Runnable()
                                         {
                                             @Override
                                             public void run()
