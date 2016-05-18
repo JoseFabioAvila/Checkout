@@ -1,5 +1,9 @@
 package com.example.fabio.checkout;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
@@ -20,7 +24,6 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import org.json.JSONArray;
@@ -47,7 +50,10 @@ public class DetalleActivity extends AppCompatActivity {
 
     String TAG = "Response";
     String getCel;
+    String respuesta;
+    int pos;
     SoapPrimitive resultString;
+    SoapPrimitive resultString2;
 
     public ArrayList<String> listItems = new ArrayList<String>();
 
@@ -71,22 +77,58 @@ public class DetalleActivity extends AppCompatActivity {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        AsyncCallWS webservices = new AsyncCallWS();
+        AsyncCallWSInicio webservices = new AsyncCallWSInicio();
         webservices.execute();
+
+        respuesta = String.valueOf(getIntent().getExtras().getInt("CheckOut"));
+        pos = getIntent().getExtras().getInt("pos");
 
         this.setTitle(getIntent().getExtras().getString("cliente"));
         toolbar.setSubtitle("Checkout  " + getIntent().getExtras().getInt("CheckOut"));
 
         lvProductosCheckout = (ListView) findViewById(R.id.lvProductosCheckout);
+
+
     }
 
-    private class AsyncCallWS extends AsyncTask<Void, Void, Void>
+    @Override
+    public void onBackPressed() {
+        alerta();
+    }
+
+    public void alerta(){
+        new AlertDialog.Builder(this)
+                .setTitle("Atención!")
+                .setMessage("Desea dar por finalizado este chec-out?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        AsyncCallWSFin webservices = new AsyncCallWSFin();
+                        webservices.execute();
+                        Intent intent = new Intent();
+                        intent.putExtra("resultado", respuesta);
+                        intent.putExtra("pos", pos);
+                        setResult(2, intent);
+                        finish();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(R.mipmap.ic_warning)
+                .show();
+    }
+
+    private class AsyncCallWSInicio extends AsyncTask<Void, Void, Void>
     {
         @Override
         protected void onPreExecute(){Log.i(TAG, "onPreExecute");}
 
         @Override
-        protected Void doInBackground(Void... params){Log.i(TAG, "doInBackground");calculate();
+        protected Void doInBackground(Void... params){
+            Log.i(TAG, "doInBackground");
+            calculate();
             return null;}
 
         @Override
@@ -143,6 +185,54 @@ public class DetalleActivity extends AppCompatActivity {
         }
     }
 
+    private class AsyncCallWSFin extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected void onPreExecute(){Log.i(TAG, "onPreExecute");}
+
+        @Override
+        protected Void doInBackground(Void... params){
+            Log.i(TAG, "doInBackground");
+            finalizarCheckout();
+            return null;}
+
+        @Override
+        protected void onPostExecute(Void result){
+            Log.i(TAG, "onPostExecute");
+            if(resultString == null)
+                Toast.makeText(getApplicationContext(), "Estoy nulo", Toast.LENGTH_LONG).show();
+            else{
+                Toast.makeText(getApplicationContext(),resultString2.toString(),Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void finalizarCheckout() {
+        String SOAP_ACTION = "http://tempuri.org/finalizarAlistadoCheckout";
+        String METHOD_NAME = "finalizarAlistadoCheckout";
+        String NAMESPACE = "http://tempuri.org/";
+        String URL = "http://ncqservices.com:82/wsCheckout/wsCheckout.asmx";
+        try{
+            SoapObject Request = new SoapObject(NAMESPACE, METHOD_NAME);
+            Request.addProperty("usuario","admin");
+            Request.addProperty("clave", "0");
+            Request.addProperty("pCheckOut",String.valueOf(getIntent().getExtras().getInt("CheckOut")));
+
+            SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            soapEnvelope.dotNet = true;
+            soapEnvelope.setOutputSoapObject(Request);
+
+            HttpTransportSE transport = new HttpTransportSE(URL);
+
+            transport.call(SOAP_ACTION, soapEnvelope);
+            resultString2 = (SoapPrimitive) soapEnvelope.getResponse();
+
+            //Log.i(TAG, "Result Celsius: " + resultString);
+            //Toast.makeText(this,"reusltado: "+resultString,Toast.LENGTH_LONG).show();
+        }
+        catch (Exception ex){ Log.e(TAG, "Error1: " + ex.getMessage()); }
+    }
+
     public void calculate(){
         //http://ncqservices.com:82/wsCheckout/wsCheckout.asmx?op=traerEncabezadoCheckout
         String SOAP_ACTION = "http://tempuri.org/traerDetalleCheckout";
@@ -174,7 +264,7 @@ public class DetalleActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_detalle, menu);
+        getMenuInflater().inflate(R.menu.menu_detalle, menu);
         return true;
     }
 
@@ -186,9 +276,10 @@ public class DetalleActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_settings) {
+        if (id == R.id.finalizar) {
+            alerta();
             return true;
-        }*/
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -422,13 +513,15 @@ public class DetalleActivity extends AppCompatActivity {
 
             if(tipo == "pendientes"){
                 //procesados2.add(pendientes2.get(pos));
-                z.procesados.add(pendientes2.get(pos));
+                //z.procesados.add(pendientes2.get(pos));
+                procesados2.add(pendientes2.get(pos));
                 adapter.remove(pos);
                 //z.procesados.remove(pos);
             }
             else if(tipo == "procesados"){
                 //pendientes2.add(procesados2.get(pos));
-                z.pendientes.add(procesados2.get(pos));
+                //z.pendientes.add(procesados2.get(pos));
+                pendientes2.add(procesados2.get(pos));
                 adapter.remove(pos);
                 //z.pendientes.remove(pos);
             }

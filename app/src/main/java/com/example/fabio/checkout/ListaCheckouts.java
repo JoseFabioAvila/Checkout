@@ -33,11 +33,14 @@ public class ListaCheckouts extends AppCompatActivity implements SearchView.OnQu
 
     ListView listaCheckouts;
 
+
     LinkedList<Checkout> checkouts = new LinkedList<Checkout>();
 
     String TAG = "Response";
     String getCel;
     SoapPrimitive resultString;
+
+    int pos;
 
     Bundle bundle;
 
@@ -77,15 +80,37 @@ public class ListaCheckouts extends AppCompatActivity implements SearchView.OnQu
                 bundle.putInt("CheckOut", checkouts.get(position).getNumCheckout());
                 bundle.putString("bodega", checkouts.get(position).getBodega());
                 bundle.putString("cliente", checkouts.get(position).getCliente());
+                bundle.putInt("pos", pos);
+                pos = position;
+
                 //Toast.makeText(getApplicationContext(), resultString.toString(), Toast.LENGTH_LONG).show();
 
                 //Intent intent = new Intent(getApplicationContext(),ListaProductos.class);
                 Intent intent = new Intent(getApplicationContext(), DetalleActivity.class);
                 intent.putExtras(bundle);
-
-                startActivity(intent);
+                startActivityForResult(intent, 2);
+                //startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Check which request we're responding to
+        if (requestCode == 2) {
+
+            String res = data.getExtras().getString("resultado");
+            int pos2 = data.getExtras().getInt("pos");
+            Toast.makeText(getApplicationContext(), "fgsdfdsfsd"+res, Toast.LENGTH_SHORT).show();
+
+            checkouts.remove(pos2);
+            listaCheckouts.setAdapter(listaCheckouts.getAdapter());
+
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "fgs dfd sfs d", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -158,8 +183,6 @@ public class ListaCheckouts extends AppCompatActivity implements SearchView.OnQu
                             checkoutObj.setBodega(listaCheckoutsJson.getJSONObject(i).getString("bodega"));
 
                             checkouts.add(checkoutObj);
-
-
                         }
 
                         listaCheckouts.setAdapter(new CustomAdapter(ListaCheckouts.this, checkouts));

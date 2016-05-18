@@ -3,4 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.fabio.checkout.DetalleActivity">
 
+    <item
+        android:id="@+id/finalizar"
+        android:title="Finalizar"
+        android:orderInCategory="100"
+        app:showAsAction="always|withText"
+        android:actionViewClass="android.support.v7.widget.SearchView"
+        android:icon="@android:drawable/ic_menu_revert" />
+
 </menu>

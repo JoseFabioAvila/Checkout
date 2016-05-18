@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.LinkedList;
@@ -79,8 +81,28 @@ public class CustomAdapterDetalle  extends BaseAdapter {
         View rowView;
         rowView = inflater.inflate(R.layout.list_item_detalle, null);
 
+
         holder.tv2 = (TextView) rowView.findViewById(R.id.descripcion);
-        holder.tv2.setText(result.get(position).getDescripcion());
+        if(result.get(position).getDescripcion().length()>36){
+
+            if(result.get(position).getDescripcion().length()>72){
+                holder.tv2.setText(
+                        result.get(position).getDescripcion().substring(0, 37) + "\n" +
+                                result.get(position).getDescripcion().substring(37,72)+ "\n" +
+                                result.get(position).getDescripcion().substring(72, result.get(position)
+                                        .getDescripcion().length()));
+            }
+            else {
+                holder.tv2.setText(
+                        result.get(position).getDescripcion().substring(0, 37) + "\n" +
+                                result.get(position).getDescripcion().substring(37, result.get(position)
+                                        .getDescripcion().length()));
+            }
+        }
+        else{
+            holder.tv2.setText(result.get(position).getDescripcion());
+        }
+
         //holder.tv2.setTextColor(Color.parseColor("#212121"));
         //holder.tv2.setTypeface(null, Typeface.BOLD);
 

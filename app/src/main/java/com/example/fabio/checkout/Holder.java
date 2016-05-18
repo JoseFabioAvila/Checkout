@@ -1,6 +1,7 @@
 package com.example.fabio.checkout;
 
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -11,5 +12,5 @@ public class Holder {
     TextView tv2;
     TextView tv3;
     TextView tv4;
-    LinearLayout ly;
+    RelativeLayout ly;
 }
