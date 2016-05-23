@@ -98,7 +98,7 @@ public class ListaCheckouts extends AppCompatActivity implements SearchView.OnQu
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // Check which request we're responding to
-        if (requestCode == 2) {
+        if (requestCode == 2 && resultCode == RESULT_OK) {
 
             String res = data.getExtras().getString("resultado");
             int pos2 = data.getExtras().getInt("pos");
@@ -109,7 +109,6 @@ public class ListaCheckouts extends AppCompatActivity implements SearchView.OnQu
 
         }
         else {
-            Toast.makeText(getApplicationContext(), "fgs dfd sfs d", Toast.LENGTH_SHORT).show();
         }
     }
 

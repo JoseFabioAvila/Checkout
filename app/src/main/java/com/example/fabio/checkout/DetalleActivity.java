@@ -98,6 +98,7 @@ public class DetalleActivity extends AppCompatActivity {
 
     public void alerta(){
         new AlertDialog.Builder(this)
+
                 .setTitle("Atención!")
                 .setMessage("Desea dar por finalizado este chec-out?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -114,6 +115,12 @@ public class DetalleActivity extends AppCompatActivity {
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // do nothing
+                    }
+                })
+                .setNeutralButton("Volver", new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                        finish();
                     }
                 })
                 .setIcon(R.mipmap.ic_warning)
