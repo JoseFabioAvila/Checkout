@@ -86,10 +86,13 @@ public class DetalleActivity extends AppCompatActivity {
 
         this.setTitle(getIntent().getExtras().getString("cliente"));
         toolbar.setSubtitle("Checkout  " + getIntent().getExtras().getInt("CheckOut"));
+<<<<<<< HEAD
 
         lvProductosCheckout = (ListView) findViewById(R.id.lvProductosCheckout);
 
         cantidadElementos = (TextView) findViewById(R.id.tvCantidadElementos);
+=======
+>>>>>>> origin/master
     }
 
     @Override
@@ -186,7 +189,7 @@ public class DetalleActivity extends AppCompatActivity {
             //onTouchEvent
 
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-            tabLayout.setTabTextColors(Color.WHITE,Color.parseColor("#FF661B"));
+            tabLayout.setTabTextColors(Color.WHITE, Color.parseColor("#FF661B"));
             tabLayout.setupWithViewPager(mViewPager);
 
             mViewPager.setCurrentItem(tabLayout.getTabAt(1).getPosition());
@@ -313,6 +316,8 @@ public class DetalleActivity extends AppCompatActivity {
         private static LinkedList<Producto> todos2;
         private static LinkedList<Producto> pendientes2;
         private static LinkedList<Producto> procesados2;
+        CustomAdapterDetalle adapterPendientes;
+        CustomAdapterDetalle adapterProcesados;
         private static DetalleActivity z;
         ListView lv;
 
@@ -328,6 +333,7 @@ public class DetalleActivity extends AppCompatActivity {
             todos2 = todo;
             procesados2 = procesado;
             pendientes2 = pendiente;
+            Log.i("p    ::",String.valueOf(sectionNumber));
             z = y;
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
@@ -340,14 +346,17 @@ public class DetalleActivity extends AppCompatActivity {
 
             rootView = inflater.inflate(R.layout.fragment_detalle, container, false);
             lv = (ListView) rootView.findViewById(R.id.lvProductosCheckout);
+            //adapterPendientes =  new CustomAdapterDetalle(getActivity(), z.pendientes,  mTouchListener, "pendientes");
+            //adapterProcesados = new CustomAdapterDetalle(getActivity(), z.procesados,  mTouchListener, "procesados");
 
             if(getArguments().getInt(ARG_SECTION_NUMBER) == 1){
-
+                Toast.makeText(getContext(),"controle 1",Toast.LENGTH_SHORT).show();
                 CustomAdapterDetalle adapter = new CustomAdapterDetalle(getActivity(), todos2, "todos");
                 lv.setAdapter(adapter);
                 cantidadElementos.setText("Total de productos: " + todos2.size());
             }
             else if(getArguments().getInt(ARG_SECTION_NUMBER) == 2){
+<<<<<<< HEAD
 
                 CustomAdapterDetalle adapter = new CustomAdapterDetalle(getActivity(), pendientes2,  mTouchListener, "pendientes");
                 lv.setAdapter(adapter);
@@ -358,6 +367,16 @@ public class DetalleActivity extends AppCompatActivity {
                 CustomAdapterDetalle adapter = new CustomAdapterDetalle(getActivity(), procesados2,  mTouchListener, "procesados");
                 lv.setAdapter(adapter);
                 cantidadElementos.setText("Procesados: " + procesados2.size());
+=======
+                Toast.makeText(getContext(),"controle 2",Toast.LENGTH_SHORT).show();
+                adapterPendientes =  new CustomAdapterDetalle(getActivity(), z.pendientes,  mTouchListener, "pendientes");
+                lv.setAdapter(adapterPendientes);
+            }
+            else if(getArguments().getInt(ARG_SECTION_NUMBER) == 3){
+                Toast.makeText(getContext(),"controle 3",Toast.LENGTH_SHORT).show();
+                adapterProcesados = new CustomAdapterDetalle(getActivity(), z.procesados,  mTouchListener, "procesados");
+                lv.setAdapter(adapterProcesados);
+>>>>>>> origin/master
             }
             return rootView;
         }
@@ -525,14 +544,14 @@ public class DetalleActivity extends AppCompatActivity {
             if(tipo == "pendientes"){
                 //procesados2.add(pendientes2.get(pos));
                 //z.procesados.add(pendientes2.get(pos));
-                procesados2.add(pendientes2.get(pos));
+                z.procesados.add(z.pendientes.get(pos));
                 adapter.remove(pos);
                 //z.procesados.remove(pos);
             }
             else if(tipo == "procesados"){
                 //pendientes2.add(procesados2.get(pos));
                 //z.pendientes.add(procesados2.get(pos));
-                pendientes2.add(procesados2.get(pos));
+                z.pendientes.add(z.procesados.get(pos));
                 adapter.remove(pos);
                 //z.pendientes.remove(pos);
             }
@@ -617,6 +636,8 @@ public class DetalleActivity extends AppCompatActivity {
         public Fragment getItem(int position){
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
+            Log.i("pos    ::",String.valueOf(position));
+            Log.i("pos + 1::",String.valueOf(position+1));
             return PlaceholderFragment.newInstance(position + 1, todos2, procesados2, pendientes2, y);
         }
 
