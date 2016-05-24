@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -59,7 +60,7 @@ public class DetalleActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
 
-
+    static TextView cantidadElementos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -88,7 +89,7 @@ public class DetalleActivity extends AppCompatActivity {
 
         lvProductosCheckout = (ListView) findViewById(R.id.lvProductosCheckout);
 
-
+        cantidadElementos = (TextView) findViewById(R.id.tvCantidadElementos);
     }
 
     @Override
@@ -344,16 +345,19 @@ public class DetalleActivity extends AppCompatActivity {
 
                 CustomAdapterDetalle adapter = new CustomAdapterDetalle(getActivity(), todos2, "todos");
                 lv.setAdapter(adapter);
+                cantidadElementos.setText("Total de productos: " + todos2.size());
             }
             else if(getArguments().getInt(ARG_SECTION_NUMBER) == 2){
 
                 CustomAdapterDetalle adapter = new CustomAdapterDetalle(getActivity(), pendientes2,  mTouchListener, "pendientes");
                 lv.setAdapter(adapter);
+                cantidadElementos.setText("Pendientes: " + pendientes2.size());
             }
             else if(getArguments().getInt(ARG_SECTION_NUMBER) == 3){
 
                 CustomAdapterDetalle adapter = new CustomAdapterDetalle(getActivity(), procesados2,  mTouchListener, "procesados");
                 lv.setAdapter(adapter);
+                cantidadElementos.setText("Procesados: " + procesados2.size());
             }
             return rootView;
         }
