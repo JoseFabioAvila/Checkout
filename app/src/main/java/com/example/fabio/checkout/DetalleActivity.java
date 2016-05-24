@@ -86,13 +86,10 @@ public class DetalleActivity extends AppCompatActivity {
 
         this.setTitle(getIntent().getExtras().getString("cliente"));
         toolbar.setSubtitle("Checkout  " + getIntent().getExtras().getInt("CheckOut"));
-<<<<<<< HEAD
 
         lvProductosCheckout = (ListView) findViewById(R.id.lvProductosCheckout);
 
         cantidadElementos = (TextView) findViewById(R.id.tvCantidadElementos);
-=======
->>>>>>> origin/master
     }
 
     @Override
@@ -356,7 +353,6 @@ public class DetalleActivity extends AppCompatActivity {
                 cantidadElementos.setText("Total de productos: " + todos2.size());
             }
             else if(getArguments().getInt(ARG_SECTION_NUMBER) == 2){
-<<<<<<< HEAD
 
                 CustomAdapterDetalle adapter = new CustomAdapterDetalle(getActivity(), pendientes2,  mTouchListener, "pendientes");
                 lv.setAdapter(adapter);
@@ -367,7 +363,6 @@ public class DetalleActivity extends AppCompatActivity {
                 CustomAdapterDetalle adapter = new CustomAdapterDetalle(getActivity(), procesados2,  mTouchListener, "procesados");
                 lv.setAdapter(adapter);
                 cantidadElementos.setText("Procesados: " + procesados2.size());
-=======
                 Toast.makeText(getContext(),"controle 2",Toast.LENGTH_SHORT).show();
                 adapterPendientes =  new CustomAdapterDetalle(getActivity(), z.pendientes,  mTouchListener, "pendientes");
                 lv.setAdapter(adapterPendientes);
@@ -376,7 +371,6 @@ public class DetalleActivity extends AppCompatActivity {
                 Toast.makeText(getContext(),"controle 3",Toast.LENGTH_SHORT).show();
                 adapterProcesados = new CustomAdapterDetalle(getActivity(), z.procesados,  mTouchListener, "procesados");
                 lv.setAdapter(adapterProcesados);
->>>>>>> origin/master
             }
             return rootView;
         }
