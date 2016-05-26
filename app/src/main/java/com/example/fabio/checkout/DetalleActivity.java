@@ -60,8 +60,6 @@ public class DetalleActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
 
-    static TextView cantidadElementos;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -86,10 +84,6 @@ public class DetalleActivity extends AppCompatActivity {
 
         this.setTitle(getIntent().getExtras().getString("cliente"));
         toolbar.setSubtitle("Checkout  " + getIntent().getExtras().getInt("CheckOut"));
-
-        lvProductosCheckout = (ListView) findViewById(R.id.lvProductosCheckout);
-
-        cantidadElementos = (TextView) findViewById(R.id.tvCantidadElementos);
     }
 
     @Override
@@ -263,7 +257,8 @@ public class DetalleActivity extends AppCompatActivity {
             transport.call(SOAP_ACTION, soapEnvelope);
             resultString = (SoapPrimitive) soapEnvelope.getResponse();
 
-            //Log.i(TAG, "Result Celsius: " + resultString);
+            Log.i(TAG, "pBodega: " + getIntent().getExtras().getString("bodega")
+                    + "Checkout: " + String.valueOf(getIntent().getExtras().getInt("CheckOut")));
             //Toast.makeText(this,"reusltado: "+resultString,Toast.LENGTH_LONG).show();
         }
         catch (Exception ex){ Log.e(TAG, "Error1: " + ex.getMessage()); }
@@ -350,19 +345,8 @@ public class DetalleActivity extends AppCompatActivity {
                 Toast.makeText(getContext(),"controle 1",Toast.LENGTH_SHORT).show();
                 CustomAdapterDetalle adapter = new CustomAdapterDetalle(getActivity(), todos2, "todos");
                 lv.setAdapter(adapter);
-                cantidadElementos.setText("Total de productos: " + todos2.size());
             }
             else if(getArguments().getInt(ARG_SECTION_NUMBER) == 2){
-
-                CustomAdapterDetalle adapter = new CustomAdapterDetalle(getActivity(), pendientes2,  mTouchListener, "pendientes");
-                lv.setAdapter(adapter);
-                cantidadElementos.setText("Pendientes: " + pendientes2.size());
-            }
-            else if(getArguments().getInt(ARG_SECTION_NUMBER) == 3){
-
-                CustomAdapterDetalle adapter = new CustomAdapterDetalle(getActivity(), procesados2,  mTouchListener, "procesados");
-                lv.setAdapter(adapter);
-                cantidadElementos.setText("Procesados: " + procesados2.size());
                 Toast.makeText(getContext(),"controle 2",Toast.LENGTH_SHORT).show();
                 adapterPendientes =  new CustomAdapterDetalle(getActivity(), z.pendientes,  mTouchListener, "pendientes");
                 lv.setAdapter(adapterPendientes);

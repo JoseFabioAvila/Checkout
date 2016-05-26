@@ -8,6 +8,8 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -29,6 +31,7 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.LinkedList;
+import java.util.StringTokenizer;
 
 public class ListaCheckouts extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
@@ -36,6 +39,7 @@ public class ListaCheckouts extends AppCompatActivity implements SearchView.OnQu
 
 
     LinkedList<Checkout> checkouts = new LinkedList<Checkout>();
+    LinkedList<Checkout> checkoutsBuscados = new LinkedList<Checkout>();
 
     String TAG = "Response";
     String getCel;
@@ -46,6 +50,8 @@ public class ListaCheckouts extends AppCompatActivity implements SearchView.OnQu
     Bundle bundle;
 
     TextView cantidadElementos;
+
+    EditText etSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +103,52 @@ public class ListaCheckouts extends AppCompatActivity implements SearchView.OnQu
         });
 
         cantidadElementos = (TextView) findViewById(R.id.tvCantidadElementos);
+        etSearch = (EditText) findViewById(R.id.etSearch);
+
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.toString().equals(""))
+                {
+                    initList();
+                }
+                else
+                {
+                    searchItem(s.toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    public void searchItem(String textToSearch)
+    {
+        checkoutsBuscados = new LinkedList<Checkout>();
+
+        for (Checkout c: checkouts)
+        {
+            if(c.getCliente().contains(textToSearch))
+            {
+                checkoutsBuscados.add(c);
+            }
+        }
+
+        listaCheckouts.setAdapter(new CustomAdapter(ListaCheckouts.this, checkoutsBuscados));
+        cantidadElementos.setText("Total Checkouts: " + checkoutsBuscados.size());
+    }
+
+    public void initList()
+    {
+        listaCheckouts.setAdapter(new CustomAdapter(ListaCheckouts.this, checkouts));
     }
 
     @Override
@@ -120,9 +172,9 @@ public class ListaCheckouts extends AppCompatActivity implements SearchView.OnQu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_lista_checkouts, menu);
+        //getMenuInflater().inflate(R.menu.menu_lista_checkouts, menu);
 
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.buscar));
+        //SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.buscar));
 
         //searchView.setOnQueryTextListener(this);
 
