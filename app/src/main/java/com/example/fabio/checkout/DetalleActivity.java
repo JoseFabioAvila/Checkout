@@ -48,6 +48,10 @@ public class DetalleActivity extends AppCompatActivity {
     LinkedList<Producto> procesados = new LinkedList<Producto>();
     LinkedList<Producto> pendientes = new LinkedList<Producto>();
 
+    public CustomAdapterDetalle todoAdapater = null;
+    public CustomAdapterDetalle procesadosAdapter = null;
+    public CustomAdapterDetalle pendientesAdapter = null;
+
     String TAG = "Response";
     String getCel;
     String respuesta;
@@ -58,8 +62,6 @@ public class DetalleActivity extends AppCompatActivity {
     public ArrayList<String> listItems = new ArrayList<String>();
 
     private ViewPager mViewPager;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -101,11 +103,11 @@ public class DetalleActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         AsyncCallWSFin webservices = new AsyncCallWSFin();
                         webservices.execute();
-                        Intent intent = new Intent();
-                        intent.putExtra("resultado", respuesta);
-                        intent.putExtra("pos", pos);
-                        setResult(2, intent);
-                        finish();
+                        //Intent intent = new Intent();
+                        //intent.putExtra("resultado", respuesta);
+                        //intent.putExtra("pos", pos);
+                        //setResult(2, intent);
+                        //finish();
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -184,7 +186,7 @@ public class DetalleActivity extends AppCompatActivity {
             tabLayout.setTabTextColors(Color.WHITE, Color.parseColor("#FF661B"));
             tabLayout.setupWithViewPager(mViewPager);
 
-            mViewPager.setCurrentItem(tabLayout.getTabAt(1).getPosition());
+            //mViewPager.setCurrentItem(tabLayout.getTabAt(1).getPosition());
         }
     }
 
@@ -205,7 +207,12 @@ public class DetalleActivity extends AppCompatActivity {
             if(resultString == null)
                 Toast.makeText(getApplicationContext(), "Estoy nulo", Toast.LENGTH_LONG).show();
             else{
-                Toast.makeText(getApplicationContext(),resultString2.toString(),Toast.LENGTH_LONG).show();
+                Intent intent = new Intent();
+                intent.putExtra("resultado", respuesta);
+                intent.putExtra("pos", pos);
+                setResult(2, intent);
+                finish();
+                //Toast.makeText(getApplicationContext(),resultString2.toString(),Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -258,7 +265,8 @@ public class DetalleActivity extends AppCompatActivity {
             transport.call(SOAP_ACTION, soapEnvelope);
             resultString = (SoapPrimitive) soapEnvelope.getResponse();
 
-            //Log.i(TAG, "Result Celsius: " + resultString);
+            Log.i(TAG, "pBodega: " + getIntent().getExtras().getString("bodega")
+                    + "Checkout: " + getIntent().getExtras().getInt("CheckOut"));
             //Toast.makeText(this,"reusltado: "+resultString,Toast.LENGTH_LONG).show();
         }
         catch (Exception ex){ Log.e(TAG, "Error1: " + ex.getMessage()); }
@@ -342,19 +350,22 @@ public class DetalleActivity extends AppCompatActivity {
             //adapterProcesados = new CustomAdapterDetalle(getActivity(), z.procesados,  mTouchListener, "procesados");
 
             if(getArguments().getInt(ARG_SECTION_NUMBER) == 1){
-                Toast.makeText(getContext(),"controle 1",Toast.LENGTH_SHORT).show();
-                CustomAdapterDetalle adapter = new CustomAdapterDetalle(getActivity(), todos2, "todos");
-                lv.setAdapter(adapter);
+            //if(z.mViewPager.getAdapter().getPageTitle(getArguments().getInt(ARG_SECTION_NUMBER)) == "Todo"){
+                //Toast.makeText(getContext(),z.mViewPager.getAdapter().getPageTitle(),Toast.LENGTH_SHORT).show();
+                z.todoAdapater = new CustomAdapterDetalle(getActivity(), todos2, "todos");
+                lv.setAdapter(z.todoAdapater);
             }
-            else if(getArguments().getInt(ARG_SECTION_NUMBER) == 2){
-                Toast.makeText(getContext(),"controle 2",Toast.LENGTH_SHORT).show();
-                adapterPendientes =  new CustomAdapterDetalle(getActivity(), z.pendientes,  mTouchListener, "pendientes");
-                lv.setAdapter(adapterPendientes);
+            if(getArguments().getInt(ARG_SECTION_NUMBER) == 2){
+            //if(z.mViewPager.getAdapter().getPageTitle(getArguments().getInt(ARG_SECTION_NUMBER)) == "Pendiente"){
+                //Toast.makeText(getContext(),"controle 2",Toast.LENGTH_SHORT).show();
+                z.pendientesAdapter =  new CustomAdapterDetalle(getActivity(), z.pendientes,  mTouchListener, "pendientes");
+                lv.setAdapter(z.pendientesAdapter);
             }
-            else if(getArguments().getInt(ARG_SECTION_NUMBER) == 3){
-                Toast.makeText(getContext(),"controle 3",Toast.LENGTH_SHORT).show();
-                adapterProcesados = new CustomAdapterDetalle(getActivity(), z.procesados,  mTouchListener, "procesados");
-                lv.setAdapter(adapterProcesados);
+            if(getArguments().getInt(ARG_SECTION_NUMBER) == 3){
+            //if(z.mViewPager.getAdapter().getPageTitle(getArguments().getInt(ARG_SECTION_NUMBER)) == "Procesados"){
+                //Toast.makeText(getContext(),"controle 3",Toast.LENGTH_SHORT).show();
+                z.procesadosAdapter = new CustomAdapterDetalle(getActivity(), z.procesados,  mTouchListener, "procesados");
+                lv.setAdapter(z.procesadosAdapter);
             }
             return rootView;
         }
@@ -523,14 +534,18 @@ public class DetalleActivity extends AppCompatActivity {
                 //procesados2.add(pendientes2.get(pos));
                 //z.procesados.add(pendientes2.get(pos));
                 z.procesados.add(z.pendientes.get(pos));
-                adapter.remove(pos);
+                //adapter.remove(pos);
+                z.pendientesAdapter.remove(pos);
+                z.procesadosAdapter.notifyDataSetChanged();
                 //z.procesados.remove(pos);
             }
             else if(tipo == "procesados"){
                 //pendientes2.add(procesados2.get(pos));
                 //z.pendientes.add(procesados2.get(pos));
                 z.pendientes.add(z.procesados.get(pos));
-                adapter.remove(pos);
+                //adapter.remove(pos);
+                z.procesadosAdapter.remove(pos);
+                z.pendientesAdapter.notifyDataSetChanged();
                 //z.pendientes.remove(pos);
             }
 
@@ -545,7 +560,7 @@ public class DetalleActivity extends AppCompatActivity {
                     for (int i = 0; i < listView.getChildCount(); ++i) {
                         final View child = listView.getChildAt(i);
                         int position = firstVisiblePosition + i;
-                        long itemId = adapter.getItemId(position);
+                        long itemId = listView.getAdapter().getItemId(position);
                         Integer startTop = mItemIdTopMap.get(itemId);
                         int top = child.getTop();
                         if (startTop != null) {
