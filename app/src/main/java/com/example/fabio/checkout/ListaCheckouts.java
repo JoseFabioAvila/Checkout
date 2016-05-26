@@ -163,9 +163,9 @@ public class ListaCheckouts extends AppCompatActivity implements SearchView.OnQu
 
             checkouts.remove(pos2);
             listaCheckouts.setAdapter(listaCheckouts.getAdapter());
-
         }
         else {
+
         }
     }
 
