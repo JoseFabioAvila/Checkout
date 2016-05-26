@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -63,6 +64,8 @@ public class DetalleActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
 
+    static TextView cantidadElementos;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -87,6 +90,10 @@ public class DetalleActivity extends AppCompatActivity {
 
         this.setTitle(getIntent().getExtras().getString("cliente"));
         toolbar.setSubtitle("Checkout  " + getIntent().getExtras().getInt("CheckOut"));
+
+        lvProductosCheckout = (ListView) findViewById(R.id.lvProductosCheckout);
+
+        cantidadElementos = (TextView) findViewById(R.id.tvCantidadElementos);
     }
 
     @Override
@@ -316,8 +323,6 @@ public class DetalleActivity extends AppCompatActivity {
         private static LinkedList<Producto> todos2;
         private static LinkedList<Producto> pendientes2;
         private static LinkedList<Producto> procesados2;
-        CustomAdapterDetalle adapterPendientes;
-        CustomAdapterDetalle adapterProcesados;
         private static DetalleActivity z;
         ListView lv;
 
@@ -354,16 +359,21 @@ public class DetalleActivity extends AppCompatActivity {
                 //Toast.makeText(getContext(),z.mViewPager.getAdapter().getPageTitle(),Toast.LENGTH_SHORT).show();
                 z.todoAdapater = new CustomAdapterDetalle(getActivity(), todos2, "todos");
                 lv.setAdapter(z.todoAdapater);
+
+                cantidadElementos.setText("Total de productos: " + todos2.size());
             }
             if(getArguments().getInt(ARG_SECTION_NUMBER) == 2){
             //if(z.mViewPager.getAdapter().getPageTitle(getArguments().getInt(ARG_SECTION_NUMBER)) == "Pendiente"){
                 //Toast.makeText(getContext(),"controle 2",Toast.LENGTH_SHORT).show();
                 z.pendientesAdapter =  new CustomAdapterDetalle(getActivity(), z.pendientes,  mTouchListener, "pendientes");
                 lv.setAdapter(z.pendientesAdapter);
+
+                cantidadElementos.setText("Pendientes: " + pendientes2.size());
             }
-            if(getArguments().getInt(ARG_SECTION_NUMBER) == 3){
-            //if(z.mViewPager.getAdapter().getPageTitle(getArguments().getInt(ARG_SECTION_NUMBER)) == "Procesados"){
-                //Toast.makeText(getContext(),"controle 3",Toast.LENGTH_SHORT).show();
+            else if(getArguments().getInt(ARG_SECTION_NUMBER) == 3){
+
+                cantidadElementos.setText("Procesados: " + procesados2.size());
+
                 z.procesadosAdapter = new CustomAdapterDetalle(getActivity(), z.procesados,  mTouchListener, "procesados");
                 lv.setAdapter(z.procesadosAdapter);
             }

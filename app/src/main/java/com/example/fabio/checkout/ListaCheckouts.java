@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -43,6 +44,8 @@ public class ListaCheckouts extends AppCompatActivity implements SearchView.OnQu
     int pos;
 
     Bundle bundle;
+
+    TextView cantidadElementos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +95,8 @@ public class ListaCheckouts extends AppCompatActivity implements SearchView.OnQu
                 //startActivity(intent);
             }
         });
+
+        cantidadElementos = (TextView) findViewById(R.id.tvCantidadElementos);
     }
 
     @Override
@@ -194,6 +199,8 @@ public class ListaCheckouts extends AppCompatActivity implements SearchView.OnQu
                     Log.i(TAG,"Error2: "+ ex.getMessage());
                 }
             }
+
+            cantidadElementos.setText("Total Checkouts: " + checkouts.size());
         }
 
     }
