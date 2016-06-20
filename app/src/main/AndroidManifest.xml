@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.fabio.checkout">
+    package="checkout.qupos.ncq.com.checkoutsncq">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SplashScreen"
+            android:name=".Utilidades.SplashScreen"
             android:noHistory="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -21,11 +21,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ListaCheckouts"
+            android:name=".ActivityCheckout.CheckoutsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".DetalleActivity"
+            android:name=".ActivityDetalle.DetalleActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>

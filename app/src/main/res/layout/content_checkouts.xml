@@ -1,15 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="56dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    tools:context=".ActivityDetalle.DetalleActivity$PlaceholderFragment">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ActivityCheckout.CheckoutsActivity"
+    tools:showIn="@layout/activity_checkouts">
 
     <EditText
-        android:id="@+id/etSearchProduct"
-        android:hint="Buscar Producto"
+        android:id="@+id/etSearch"
+        android:hint="Buscar Checkouts"
         android:textStyle="italic"
         android:textColor="#212121"
         android:layout_marginTop="5dp"
@@ -19,7 +23,7 @@
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/lvProductosCheckout"
+        android:id="@+id/lv_checkouts"
         android:layout_marginTop="50dp"
         android:layout_marginBottom="30dp"/>
 
@@ -30,8 +34,7 @@
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryDark"
         android:textStyle="italic"
-        android:text="Total Checkouts: 11"
-        android:id="@+id/tvCantidadElementosDetalle"
+        android:id="@+id/tvCantidadElementos"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>
 
